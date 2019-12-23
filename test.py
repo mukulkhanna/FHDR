@@ -11,9 +11,11 @@ from tqdm import tqdm
 
 opt = Options().parse()
 
-data = HDRDataset(mode='test', opt=opt)
-dataset = DataLoader(data, batch_size=opt.batch_size)
-print("Testing samples: ", len(data))
+hdr_dataset = HDRDataset(mode='test', opt=opt)
+dataset = DataLoader(hdr_dataset, batch_size=opt.batch_size)
+
+print("Testing samples: ", len(hdr_dataset))
+
 model = FHDR(iteration_count = opt.iter)
 
 str_ids = opt.gpu_ids.split(',')
@@ -42,6 +44,8 @@ model.load_state_dict(torch.load(opt.ckpt_path))
 avg_psnr = 0
 avg_ssim = 0
 
+print('Starting evaluation. Results will be saved in \'/test_results\' directory')
+
 with torch.no_grad():    
     
     for batch, data in enumerate(tqdm(dataset, desc="Testing %")):
@@ -56,26 +60,26 @@ with torch.no_grad():
         mu_tonemap_gt = mu_tonemap(ground_truth)
 
         output = output[-1]
-
-        save_ldr_image(input, './test_results/ldr_b_{}.png'.format(batch))
-        save_hdr_image(output, './test_results/generated_hdr_b_{}.hdr'.format(batch))
-        save_hdr_image(ground_truth, './test_results/gt_hdr_b_{}.hdr'.format(batch))
-
-        mse = mse_loss(mu_tonemap(output), mu_tonemap_gt)
-        psnr = 10 * np.log10(1 / mse.item())
-        avg_psnr += psnr
         
-        ssim = 0
+        for batch_ind in range(len(output.data)):
 
-        for batch in range(len(output.data)):
-            generated = (np.transpose(output.data[batch].cpu().numpy(), (1, 2, 0)) + 1) / 2.0
-            real = (np.transpose(ground_truth.data[batch].cpu().numpy(), (1, 2, 0)) + 1) / 2.0
-            ssim += compare_ssim(generated, real, multichannel = True)
+            save_ldr_image(img_tensor=input, batch=batch_ind, path='./test_results/ldr_b_{}_{}.png'.format(batch, batch_ind))
+            save_hdr_image(img_tensor=output, batch=batch_ind, path='./test_results/generated_hdr_b_{}_{}.hdr'.format(batch, batch_ind))
+            save_hdr_image(img_tensor=ground_truth, batch=batch_ind, path='./test_results/gt_hdr_b_{}_{}.hdr'.format(batch, batch_ind))
+            
+            if opt.log_scores:
+                mse = mse_loss(mu_tonemap(output.data[batch_ind]), mu_tonemap_gt.data[batch_ind])
+                psnr = (10 * np.log10(1 / mse.item()))
 
-        ssim /= len(output.data)
-        avg_ssim += ssim
-        
-        # print ("psnr : ", psnr, "ssim :", ssim, data['path'])
+                avg_psnr +=  psnr
 
-    print("===> Avg. PSNR: {:.4f} dB".format(avg_psnr / len(dataset)))
-    print("Avg SSIM -> " + str(avg_ssim/len(dataset)))
+                generated = (np.transpose(output.data[batch_ind].cpu().numpy(), (1, 2, 0)) + 1) / 2.0
+                real = (np.transpose(ground_truth.data[batch_ind].cpu().numpy(), (1, 2, 0)) + 1) / 2.0
+                ssim = compare_ssim(generated, real, multichannel = True)
+                avg_ssim += ssim
+
+if opt.log_scores:
+    print("===> Avg. PSNR: {:.4f} dB".format(avg_psnr / len(hdr_dataset)))
+    print("Avg SSIM -> " + str(avg_ssim/len(hdr_dataset)))
+
+print('Evaluation completed.')

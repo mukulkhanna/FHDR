@@ -29,8 +29,8 @@ def write_hdr(hdr_image, path):
         rgbe.flatten().tofile(f)
         f.close()
 
-def save_hdr_image(img_tensor, path):
-    img = img_tensor.data[0].cpu().float().numpy()
+def save_hdr_image(img_tensor, batch, path):
+    img = img_tensor.data[batch].cpu().float().numpy()
     img = np.transpose(img, (1, 2, 0))
 
     if img.shape[2] == 1 or img.shape[2] > 3:        
@@ -38,8 +38,8 @@ def save_hdr_image(img_tensor, path):
     
     write_hdr(img.astype(np.float32), path)
 
-def save_ldr_image(img_tensor, path):
-    img = img_tensor.data[0].cpu().float().numpy()
+def save_ldr_image(img_tensor, batch, path):
+    img = img_tensor.data[batch].cpu().float().numpy()
     img = 255 * np.transpose(img, (1, 2, 0))
 
     if img.shape[2] == 1 or img.shape[2] > 3:        
@@ -58,10 +58,10 @@ def save_checkpoint(epoch, model):
     print('Saved checkpoint for epoch ', epoch)
 
 def update_lr(optimizer, epoch, opt):
-    new_lr = opt.lr - (epoch - opt.lr_decay_after / opt.epochs - opt.lr_decay_after)
+    new_lr = opt.lr - opt.lr * (epoch - opt.lr_decay_after)/(opt.epochs - opt.lr_decay_after)
     
     for param_group in optimizer.param_groups:
         param_group['lr'] = new_lr
-
-    print('Learning rate decayed. Updated LR is: ', opt.lr)
+    
+    print('Learning rate decayed. Updated LR is: %.6f'%new_lr)
 

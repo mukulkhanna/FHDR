@@ -31,11 +31,13 @@ Results
 
 #### Qualitative
 
+
 <img src="https://user-images.githubusercontent.com/24846546/71311632-645f3e80-2418-11ea-9bcc-70e8fdc24e1e.png">
 <img src="https://user-images.githubusercontent.com/24846546/71311566-c0759300-2417-11ea-91d2-e3bac56843b6.png">
 <img src="https://user-images.githubusercontent.com/24846546/71311567-c10e2980-2417-11ea-91fa-d9d871ea1a45.png">
 <img src="https://user-images.githubusercontent.com/24846546/71311565-bf446600-2417-11ea-9e08-96ba7a182531.png">
 
+(images have been tonemapped using [Reinhard](https://www.cs.utah.edu/~reinhard/cdrom/tonemap.pdf)'s formula for displaying)
 
 #### Quantitative
 
@@ -117,7 +119,12 @@ python3 test.py --ckpt_path /path/to/pth/checkpoint
 
 - Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
 - If checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
-- PSNR and SSIM scores are provided for quantitative evaluation.
+- PSNR and SSIM scores can be logged for quantitative evaluation by -
+
+```sh
+python3 test.py --log_scores
+```
+
 
 
 Pretrained models [Coming soon]

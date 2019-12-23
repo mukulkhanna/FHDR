@@ -17,12 +17,14 @@ class Options():
         self.parser.add_argument('--iter', type=int, default='1', help='number of iterations for feedback mechanisms (refer to paper)')
 
         # debugging options
+        self.parser.add_argument('--print_model', action='store_true', help='print model')
         self.parser.add_argument('--save_ckpt_after', type=int, default=2, help='number of epochs after which checkpoints are saved')        
         self.parser.add_argument('--log_after', type=int, default=500, help='number of batches after which batch, loss is logged')        
         self.parser.add_argument('--save_results_after', type=int, default=1000, help='number of batches after which results are saved')        
 
         # testing options
         self.parser.add_argument('--ckpt_path', type=str, default='./checkpoints/latest.ckpt', help='path of checkpoint to be loaded')        
+        self.parser.add_argument('--log_scores', action='store_true', help='log PSNR, SSIM scores at evaluation')
         
 
     def parse(self):
