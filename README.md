@@ -44,7 +44,7 @@ To better utilize the power of CNNs, we exploit the idea of feedback, where the 
 Results
 -----
 
-#### Qualitative
+### Qualitative
 
 
 <img src="https://user-images.githubusercontent.com/24846546/71311632-645f3e80-2418-11ea-9bcc-70e8fdc24e1e.png">
@@ -54,7 +54,7 @@ Results
 
 (images have been tonemapped using [Reinhard](https://www.cs.utah.edu/~reinhard/cdrom/tonemap.pdf)'s formula for displaying)
 
-#### Quantitative
+### Quantitative
 
 <img src="https://user-images.githubusercontent.com/24846546/71311656-b7d18c80-2418-11ea-8acf-238e0b257f6f.jpg" width="70%">
 
@@ -65,13 +65,18 @@ Setup
 
 - Python3
 - [PyTorch](https://pytorch.org/)
-- CUDA, CUDNN
+- GPU, CUDA, cuDNN
 - [OpenCV](https://opencv.org)
 - [PIL](https://pypi.org/project/Pillow/)
 - [Numpy](https://numpy.org/)
 - [scikit-image](https://scikit-image.org/)
 - [tqdm](https://pypi.org/project/tqdm/)
 
+**`requirements.txt`** has been provided for installing Python dependencies.
+
+```sh
+pip install -r requirements.txt
+```
 
 Dataset
 --------
