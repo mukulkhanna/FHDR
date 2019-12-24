@@ -12,10 +12,25 @@ This repository contains the code for the paper's implementation.
 
 <img src="https://user-images.githubusercontent.com/24846546/71309080-99a96380-23fb-11ea-94b3-2384eca101dd.png">
 
+Table of contents:
+-----------
+
+- [About the project](#about-the-project)
+- [Introduction](#introduction)
+- [Results](#results)
+    - [Qualitative](#qualitative)
+    - [Quantitative](#quantitative)
+- [Setup](#setup)
+    - [Prerequisites](#pre-requisites)
+- [Dataset](#dataset)
+- [Training](#training)
+- [Pretrained models](#pretrained-models)
+- [Evaluation](#evaluation)
+
 About the project
 -----------
 
-This project was a part of my research internship at IIT Gandhinagar’s Computer Vision lab, with Prof Shanmuganathan Raman and fellow Research Assistant, Zeeshan Khan. The aim of the project was to generate High Dynamic Range (HDR) content from Low Dynamic Range (LDR) images captured from off-the-shelf consumer cameras using Deep Learning. This research was supported by the Science and Engineering Research Board (SERB) Core Research Grant.
+This project was a part of my research internship at IIT Gandhinagar’s Computer Vision lab, with Prof [Shanmuganathan Raman](https://people.iitgn.ac.in/~shanmuga/) and fellow Research Assistant, Zeeshan Khan. The aim of the project was to generate High Dynamic Range (HDR) content from Low Dynamic Range (LDR) images captured from off-the-shelf consumer cameras using Deep Learning. This research was supported by the Science and Engineering Research Board (SERB) Core Research Grant.
 
 Introduction
 ------------
@@ -88,6 +103,12 @@ The dataset should follow the following folder structure -
 
 ```
 
+- Sample test datasets can be downloaded here - 
+    - [512x512 size images](https://drive.google.com/open?id=1tv8kdeoT12AJL2iMnQkNUfgY2RjirNp9)
+    - [256x256 size images](https://drive.google.com/open?id=1KQCLpXwRshmrUi10oG1aPNvOCExeCGv5)
+
+- For evaluating on this dataset, download and unzip the folder, replace it with the `test` directory in the `dataset` folder, and refer to [Pretrained models](#pretrained-models) and [Evaluation](#evaluation).
+
 **Note:** The pre-trained models were trained on 256x256 size images.
 
 Training
@@ -107,23 +128,7 @@ python3 train.py --help
 - **`--iter`** param is used to specify the number of feedback iterations for global and local feedback mechanisms (refer to paper/architecture diagram)
 - Checkpoints of the model are saved in the **`checkpoints`** directory. (Saved after every 2 epochs by default)
 - GPU is used for training. Specify GPU IDs using **`--gpu_ids`** param.
-
-Evaluation
-----------
-
-The performance of the network can be evaluated using the **`test.py`** file - 
-
-```sh
-python3 test.py --ckpt_path /path/to/pth/checkpoint
-```
-
-- Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
-- If checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
-- PSNR and SSIM scores can be logged for quantitative evaluation by -
-
-```sh
-python3 test.py --log_scores
-```
+- The iter-1 model takes around 2.5 days to train on a dataset of 12k images on an RTX 2070 SUPER GPU.
 
 Pretrained models
 ---------------------------
@@ -140,5 +145,24 @@ These models have been trained with the default options, on 256x256 size images 
 Here is a graph plotting the performance vs iteration count. 
 
 <img src="https://user-images.githubusercontent.com/24846546/71311250-ed28ab00-2415-11ea-9842-f84b5999161e.png" width="40%">
+
+Evaluation
+----------
+
+The performance of the network can be evaluated using the **`test.py`** file - 
+
+```sh
+python3 test.py --ckpt_path /path/to/pth/checkpoint
+```
+
+- Test results (LDR input, HDR prediction and HDR ground truth) are stored in the **`test_results`** directory.
+- HDR images can be viewed using [OpenHDRViewer](https://viewer.openhdr.org).
+- If checkpoint path is not specified, it defaults to `checkpoints/latest.ckpt` for evaluating the model.
+- PSNR and SSIM scores can be logged for quantitative evaluation by -
+
+```sh
+python3 test.py --log_scores
+```
+
 
 
