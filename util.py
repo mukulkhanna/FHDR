@@ -40,12 +40,8 @@ def save_hdr_image(img_tensor, batch, path):
 
 def save_ldr_image(img_tensor, batch, path):
     img = img_tensor.data[batch].cpu().float().numpy()
-    img = 255 * np.transpose(img, (1, 2, 0))
+    img = 255 * (np.transpose(img, (1, 2, 0)) + 1)/2
 
-    if img.shape[2] == 1 or img.shape[2] > 3:        
-        img = img[:,:,0]
-
-    # img = img.astype(np.uint8)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.imwrite(path, img)
 

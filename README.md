@@ -125,22 +125,20 @@ python3 test.py --ckpt_path /path/to/pth/checkpoint
 python3 test.py --log_scores
 ```
 
-
-
-Pretrained models [Coming soon]
+Pretrained models
 ---------------------------
 
-<!-- Pre-trained models can be downloaded from the below-mentioned links. 
+Pre-trained models can be downloaded from the below-mentioned links. 
 
 These models have been trained with the default options, on 256x256 size images for 200 epochs, in accordance with the paper.
 
-- [Feed-forward model]()
-- [2-Iterations model]()
-- [3-Iterations model]()
-- [4-Iterations model]()
+- [Feed-forward (Iteration - 1) model](https://drive.google.com/file/d/1iTSU-tsencVgefH8oNorf9JExGKylaXo/view?usp=sharing)
+- [2-Iterations model]() [Coming soon]
+- [3-Iterations model]() [Coming soon]
+- [4-Iterations model]() [Coming soon]
 
-Here is a graph plotting performance vs iteration count. 
+Here is a graph plotting the performance vs iteration count. 
 
-<img src="https://user-images.githubusercontent.com/24846546/71311250-ed28ab00-2415-11ea-9842-f84b5999161e.png" width="40%"> -->
+<img src="https://user-images.githubusercontent.com/24846546/71311250-ed28ab00-2415-11ea-9842-f84b5999161e.png" width="40%">
 
 
