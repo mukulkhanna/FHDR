@@ -125,7 +125,7 @@ for epoch in range(start_epoch, opt.epochs + 1):
             running_loss = 0
             
         if (batch + 1) % opt.save_results_after == 0:    # save image results
-            save_ldr_image(img_tensor=input, batch=0, path='./training_results/ldr_e_{}_b_{}.jpg'.format(epoch, batch))
+            save_ldr_image(img_tensor=input, batch=0, path='./training_results/ldr_e_{}_b_{}.jpg'.format(epoch, batch+1))
             save_hdr_image(img_tensor=output, batch=0, path='./training_results/generated_hdr_e_{}_b_{}.hdr'.format(epoch, batch+1))
             save_hdr_image(img_tensor=ground_truth, batch=0, path='./training_results/gt_hdr_e_{}_b_{}.hdr'.format(epoch, batch+1))
 

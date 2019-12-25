@@ -1,7 +1,7 @@
 FHDR: HDR Image Reconstruction from a SingleLDR Image using Feedback Network
 ========================================
 
-### [Project page](https://mukulkhanna.github.io/projects/FHDR) |   [Presentation](https://sigport.org/documents/fhdr-hdr-image-reconstruction-single-ldr-image-using-feedback-network)  |  Paper | [Code](https://github.com/mukulkhanna/FHDR)
+### [Project page](https://mukulkhanna.github.io/projects/FHDR) |   [Presentation](https://sigport.org/documents/fhdr-hdr-image-reconstruction-single-ldr-image-using-feedback-network)  |  [Paper](https://arxiv.org/abs/1912.11463) | [Code](https://github.com/mukulkhanna/FHDR)
 
 This repository contains the code for the paper's implementation.
 
