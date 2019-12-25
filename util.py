@@ -7,7 +7,7 @@ def load_checkpoint(model, ckpt_path):
     start_epoch = np.loadtxt('./checkpoints/state.txt', dtype=int)
     model.load_state_dict(torch.load(ckpt_path))
     print('Resuming from epoch ', start_epoch)
-    return start_epoch
+    return start_epoch, model
 
 def make_required_directories():
     if not os.path.exists('./checkpoints'):

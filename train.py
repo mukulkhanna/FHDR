@@ -30,25 +30,10 @@ data_loader = DataLoader(dataset, batch_size=opt.batch_size)
 print("Training samples: ", len(dataset))
 
 # ========================================
-# loading, initialising the model
+# model init
 # ========================================
 
 model = FHDR(iteration_count = opt.iter)
-if opt.continue_train:
-    try:
-        start_epoch = load_checkpoint(model, opt.ckpt_path)
-
-    except Exception as e:
-        print(e)
-        start_epoch = 1
-        model.apply(weights_init)
-        print('Checkpoint not found! Training from scratch.')
-else:    
-    start_epoch = 1
-    model.apply(weights_init)
-
-if opt.print_model:
-    print(model)
 
 # ========================================
 # gpu configuration
@@ -80,6 +65,27 @@ perceptual_loss = VGGLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 
 make_required_directories()
+
+# ==================================================
+#  loading checkpoints if continuing training
+# ==================================================
+
+if opt.continue_train:
+    try:
+        start_epoch, model = load_checkpoint(model, opt.ckpt_path)
+
+    except Exception as e:
+        print(e)
+        print('Checkpoint not found! Training from scratch.')
+        start_epoch = 1
+        model.apply(weights_init)
+else:    
+    start_epoch = 1
+    model.apply(weights_init)
+
+if opt.print_model:
+    print(model)
+
 
 # ========================================
 #  training
