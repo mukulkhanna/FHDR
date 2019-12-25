@@ -1,70 +1,45 @@
+"""
+Script for training the FHDR model.
+"""
+
 from data_loader import HDRDataset
 from options import Options
 from torch.utils.data import Dataset, DataLoader
 from model import FHDR
 import os, time, torch, torch.nn as nn
 import numpy as np
-from util import mu_tonemap, save_ldr_image, save_hdr_image, save_checkpoint, update_lr
+from util import load_checkpoint, make_required_directories, mu_tonemap, save_ldr_image, save_hdr_image, save_checkpoint, update_lr
 from vgg import VGGLoss
 from tqdm import tqdm
 
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
-        # m.weight.data.normal_(0.0, 0.02)
         m.weight.data.normal_(0.0, 0.0)
 
-# initialise training/testing params
+# initialise training options
 opt = Options().parse()
 
+# ======================================
 # loading data
-data = HDRDataset(mode='train', opt=opt)
-dataset = DataLoader(data, batch_size=opt.batch_size)
+# ======================================
 
-print("Training samples: ", len(data))
+dataset = HDRDataset(mode='train', opt=opt)
+data_loader = DataLoader(dataset, batch_size=opt.batch_size)
 
-# loading the model
+print("Training samples: ", len(dataset))
+
+# ========================================
+# loading, initialising the model
+# ========================================
+
 model = FHDR(iteration_count = opt.iter)
-
-str_ids = opt.gpu_ids.split(',')
-opt.gpu_ids = []
-for str_id in str_ids:
-    id = int(str_id)
-    if id >= 0:
-        opt.gpu_ids.append(id)
-
-# set gpu ids
-if len(opt.gpu_ids) > 0:
-    torch.cuda.set_device(opt.gpu_ids[0])
-
-# initialising losses
-l1 = torch.nn.L1Loss()
-perceptual_loss = VGGLoss()
-
-if torch.cuda.device_count() > 1:
-    model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
-
-if torch.cuda.device_count() > 0:
-    assert(torch.cuda.is_available())   
-    model.cuda()
-
-optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
-
-if not os.path.exists('./checkpoints'):
-    print('Making checkpoints directory')
-    os.makedirs('./checkpoints')
-
-if not os.path.exists('./training_results'):
-    print('Making training_results directory')
-    os.makedirs('./training_results')
-
 if opt.continue_train:
     try:
-        start_epoch = np.loadtxt('./checkpoints/state.txt', dtype=int)
-        model.load_state_dict(torch.load(opt.ckpt_path))
-        print('Resuming from epoch ', start_epoch)
+        start_epoch = load_checkpoint(model, opt.ckpt_path)
 
-    except:
+    except Exception as e:
+        print(e)
         start_epoch = 1
         model.apply(weights_init)
         print('Checkpoint not found! Training from scratch.')
@@ -75,46 +50,88 @@ else:
 if opt.print_model:
     print(model)
 
+# ========================================
+# gpu configuration
+# ========================================
+
+str_ids = opt.gpu_ids.split(',')
+opt.gpu_ids = []
+for str_id in str_ids:
+    id = int(str_id)
+    if id >= 0:
+        opt.gpu_ids.append(id)
+
+# set gpu ids
+if len(opt.gpu_ids) > 0:
+    assert(torch.cuda.is_available())   
+    assert(torch.cuda.device_count() == len(opt.gpu_ids)) 
+    
+    torch.cuda.set_device(opt.gpu_ids[0])
+    
+    model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
+    model.cuda(opt.gpu_ids[0])
+
+# ========================================
+#  initialising losses and optimizer 
+# ========================================
+
+l1 = torch.nn.L1Loss()
+perceptual_loss = VGGLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
+
+make_required_directories()
+
+# ========================================
+#  training
+# ========================================
+
 for epoch in range(start_epoch, opt.epochs + 1):
     
+    epoch_start = time.time()
+    running_loss = 0
+    
+    # check whether LR needs to be updated
     if epoch > opt.lr_decay_after:
         update_lr(optimizer, epoch, opt)
 
-    epoch_start = time.time()
-    running_loss = 0
-
     print("Epoch: ", epoch)
 
-    for batch, data in enumerate(tqdm(dataset, desc='Batch %')):
+    for batch, data in enumerate(tqdm(data_loader, desc='Batch %')):
 
         optimizer.zero_grad()
         
         input = data['ldr_image'].data.cuda()
         ground_truth = data['hdr_image'].data.cuda()
 
-        # forward pass
+        # forward pass ->
         output = model(input)
 
         l1_loss = 0
         vgg_loss = 0
         
-        # tonemapping ground truth
+        # tonemapping ground truth ->
         mu_tonemap_gt = mu_tonemap(ground_truth)
 
-        # computing loss for n outputs (from n-iterations)
+        # computing loss for n generated outputs (from n-iterations) ->
         for image in output:
             l1_loss += l1(mu_tonemap(image), mu_tonemap_gt)
             vgg_loss += perceptual_loss(mu_tonemap(image), mu_tonemap_gt)
 
+        # averaged over n iterations
         l1_loss /= len(output)
         vgg_loss /= len(output)
         
+        # averaged over batches
         l1_loss = torch.mean(l1_loss)
         vgg_loss = torch.mean(vgg_loss)
 
+        # FHDR loss function
         loss = l1_loss + (vgg_loss * 10)
 
+        # output is the final reconstructed image i.e. last in the array of outputs of n iterations
         output = output[-1]
+        
+        # backpropagate and step
         loss.backward()
         optimizer.step()
 

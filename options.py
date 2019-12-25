@@ -1,6 +1,10 @@
 import argparse
 
 class Options():
+    """
+    Options and settings for training, debugging and evaluation of FHDR model.
+    """
+
     def __init__(self):
         self.parser = argparse.ArgumentParser()
         
