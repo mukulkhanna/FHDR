@@ -46,15 +46,17 @@ for str_id in str_ids:
     if id >= 0:
         opt.gpu_ids.append(id)
 
-# set gpu ids
+# set gpu device
 if len(opt.gpu_ids) > 0:
     assert(torch.cuda.is_available())   
-    assert(torch.cuda.device_count() == len(opt.gpu_ids)) 
+    assert(torch.cuda.device_count() >= len(opt.gpu_ids)) 
     
     torch.cuda.set_device(opt.gpu_ids[0])
     
-    model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
-    model.cuda(opt.gpu_ids[0])
+    if len(opt.gpu_ids) > 1:
+        model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
+    
+    model.cuda()
 
 # ========================================
 #  initialising losses and optimizer 
@@ -64,7 +66,7 @@ l1 = torch.nn.L1Loss()
 perceptual_loss = VGGLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 
-make_required_directories()
+make_required_directories(mode='test')
 
 # ==================================================
 #  loading checkpoints if continuing training
@@ -85,7 +87,6 @@ else:
 
 if opt.print_model:
     print(model)
-
 
 # ========================================
 #  training

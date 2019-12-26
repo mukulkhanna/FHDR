@@ -9,14 +9,19 @@ def load_checkpoint(model, ckpt_path):
     print('Resuming from epoch ', start_epoch)
     return start_epoch, model
 
-def make_required_directories():
-    if not os.path.exists('./checkpoints'):
-        print('Making checkpoints directory')
-        os.makedirs('./checkpoints')
+def make_required_directories(mode):
+    if mode == 'train':
+        if not os.path.exists('./checkpoints'):
+            print('Making checkpoints directory')
+            os.makedirs('./checkpoints')
 
-    if not os.path.exists('./training_results'):
-        print('Making training_results directory')
-        os.makedirs('./training_results')
+        if not os.path.exists('./training_results'):
+            print('Making training_results directory')
+            os.makedirs('./training_results')
+    elif mode == 'test':
+        if not os.path.exists('./test_results'):
+            print('Making test_results directory')
+            os.makedirs('./test_results')
 
 
 def mu_tonemap(img):
