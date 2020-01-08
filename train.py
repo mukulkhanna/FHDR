@@ -66,7 +66,7 @@ l1 = torch.nn.L1Loss()
 perceptual_loss = VGGLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.999))
 
-make_required_directories(mode='test')
+make_required_directories(mode='train')
 
 # ==================================================
 #  loading checkpoints if continuing training
