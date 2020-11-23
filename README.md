@@ -30,6 +30,7 @@ Table of contents:
 - [Training](#training)
 - [Pretrained models](#pretrained-models)
 - [Evaluation](#evaluation)
+- [Citation](#citation)
 
 About the project
 -----------
@@ -173,5 +174,18 @@ python3 test.py --ckpt_path /path/to/pth/checkpoint
 python3 test.py --log_scores
 ```
 
+Citation
+----------
+If you use this code for your research, please cite the following [paper](http://arxiv.org/abs/1912.11463). 
 
+```
+@INPROCEEDINGS{8969167,
+    author={Z. {Khan} and M. {Khanna} and S. {Raman}},
+    booktitle={2019 IEEE Global Conference on Signal and Information Processing (GlobalSIP)},
+    title={FHDR: HDR Image Reconstruction from a Single LDR Image using Feedback Network},
+    year={2019},
+    pages={1-5},
+    doi={10.1109/GlobalSIP45357.2019.8969167}
+}
+```
 
