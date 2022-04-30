@@ -2,64 +2,29 @@ FHDR: HDR Image Reconstruction from a SingleLDR Image using Feedback Network
 ========================================
 [![arXiv](https://img.shields.io/badge/cs.cv-arXiv%3A1912.11463-42ba94.svg)](https://arxiv.org/abs/1912.11463v1)
 
+This repository contains the code for our FHDR work accepted at [GlobalSIP](http://2019.ieeeglobalsip.org).
 
-### [Project page](https://mukulkhanna.github.io/projects/FHDR) |   [Presentation](https://sigport.org/documents/fhdr-hdr-image-reconstruction-single-ldr-image-using-feedback-network)  |  [Paper](https://arxiv.org/abs/1912.11463) | [Code](https://github.com/mukulkhanna/FHDR)
-
-This repository contains the code for the following paper's implementation.
-
-**FHDR: HDR Image Reconstruction from a SingleLDR Image using Feedback Network**<br>
-Zeeshan Khan, Mukul Khanna, Shanmuganathan Raman<br>
-2019 IEEE Global Conference on Signal and Information Processing ([GlobalSIP](http://2019.ieeeglobalsip.org))
-
-
-<img src="https://user-images.githubusercontent.com/24846546/71309080-99a96380-23fb-11ea-94b3-2384eca101dd.png">
-
+<p align="center">
+<img src="https://user-images.githubusercontent.com/24846546/166098107-5d9d394e-6e32-4963-9417-7c1d152d717d.png" width="70%">
+</p>
+    
 Table of contents:
 -----------
 
-- [About the project](#about-the-project)
-- [Introduction](#introduction)
-- [Results](#results)
-    - [Qualitative](#qualitative)
-    - [Quantitative](#quantitative)
+- [Abstract](#abstract)
 - [Setup](#setup)
-    - [Prerequisites](#pre-requisites)
 - [Dataset](#dataset)
 - [Training](#training)
 - [Pretrained models](#pretrained-models)
 - [Evaluation](#evaluation)
 - [Citation](#citation)
+- [Acknowledgement](#acknowledgement)
 
-About the project
------------
-
-This project was a part of my research internship at IIT Gandhinagar’s Computer Vision lab, with Prof [Shanmuganathan Raman](https://people.iitgn.ac.in/~shanmuga/) and fellow Research Assistant, Zeeshan Khan. The aim of the project was to generate High Dynamic Range (HDR) content from Low Dynamic Range (LDR) images captured from off-the-shelf consumer cameras using Deep Learning. This research was supported by the Science and Engineering Research Board (SERB) Core Research Grant.
-
-Introduction
+Abstract
 ------------
 
-High dynamic range (HDR) image generation from a single exposure low dynamic range (LDR) image has been made possible due to the recent advances in Deep Learning. Various feed-forward Convolutional Neural Networks (CNNs) have been proposed for learning LDR to HDR representations. 
-
+> High dynamic range (HDR) image generation from a single exposure low dynamic range (LDR) image has been made possible due to the recent advances in Deep Learning. Various feed-forward Convolutional Neural Networks (CNNs) have been proposed for learning LDR to HDR representations. <br><br>
 To better utilize the power of CNNs, we exploit the idea of feedback, where the initial low level features are guided by the high level features using a hidden state of a Recurrent Neural Network. Unlike a single forward pass in a conventional feed-forward network, the reconstruction from LDR to HDR in a feedback network is learned over multiple iterations. This enables us to create a coarse-to-fine representation, leading to an improved reconstruction at every iteration. Various advantages over standard feed-forward networks include early reconstruction ability and better reconstruction quality with fewer network parameters. We design a dense feedback block and propose an end-to-end feedback network- FHDR for HDR image generation from a single exposure LDR image. Qualitative and quantitative evaluations show the superiority of our approach over the state of-the-art methods.
-
-<img src="https://user-images.githubusercontent.com/24846546/71309203-2274cf00-23fd-11ea-8fbb-fcd0fb36ec1d.png" width="75%">
-
-Results
------
-
-### Qualitative
-
-
-<img src="https://user-images.githubusercontent.com/24846546/71311632-645f3e80-2418-11ea-9bcc-70e8fdc24e1e.png">
-<img src="https://user-images.githubusercontent.com/24846546/71311566-c0759300-2417-11ea-91d2-e3bac56843b6.png">
-<img src="https://user-images.githubusercontent.com/24846546/71311567-c10e2980-2417-11ea-91fa-d9d871ea1a45.png">
-<img src="https://user-images.githubusercontent.com/24846546/71311565-bf446600-2417-11ea-9e08-96ba7a182531.png">
-
-(images have been tonemapped using [Reinhard](https://www.cs.utah.edu/~reinhard/cdrom/tonemap.pdf)'s formula for displaying)
-
-### Quantitative
-
-<img src="https://user-images.githubusercontent.com/24846546/71311656-b7d18c80-2418-11ea-8acf-238e0b257f6f.jpg" width="70%">
 
 Setup
 -----
@@ -186,4 +151,8 @@ If you use this code for your research, please cite the following [paper](http:/
     doi={10.1109/GlobalSIP45357.2019.8969167}
 }
 ```
+Acknowledgement
+------
+
+This research was supported by the Science and Engineering Research Board (SERB) Core Research Grant.
 
