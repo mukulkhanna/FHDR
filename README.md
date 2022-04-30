@@ -1,4 +1,4 @@
-FHDR: HDR Image Reconstruction from a SingleLDR Image using Feedback Network 
+FHDR: HDR Image Reconstruction from a Single LDR Image using Feedback Network 
 ========================================
 [![arXiv](https://img.shields.io/badge/cs.cv-arXiv%3A1912.11463-42ba94.svg)](https://arxiv.org/abs/1912.11463v1)
 
